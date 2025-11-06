@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Kelas;
 use App\Models\UserModel;
+use Illuminate\Support\Facades\Crypt;
 
 class UserController extends Controller
 {
@@ -12,17 +13,45 @@ class UserController extends Controller
     public $kelasModel;
 
     public function index(){
+        $users = $this->userModel->getUser();
+        
+        // Dekripsi nama_kelas untuk setiap user
+        foreach($users as $user) {
+            if($user->nama_kelas) {
+                try {
+                    $user->nama_kelas = Crypt::decryptString($user->nama_kelas);
+                } catch (\Exception $e) {
+                    // Jika gagal dekripsi, gunakan nilai asli (untuk backward compatibility)
+                    $user->nama_kelas = $user->nama_kelas;
+                }
+            }
+        }
+        
         $data = [
             'title' => 'List User',
-            'user' => $this->userModel->getUser()
+            'user' => $users
         ];
         return view('list_user', $data);
     }
 
     public function table(){
+        $users = $this->userModel->getUser();
+        
+        // Dekripsi nama_kelas untuk setiap user
+        foreach($users as $user) {
+            if($user->nama_kelas) {
+                try {
+                    $user->nama_kelas = Crypt::decryptString($user->nama_kelas);
+                } catch (\Exception $e) {
+                    // Jika gagal dekripsi, gunakan nilai asli (untuk backward compatibility)
+                    $user->nama_kelas = $user->nama_kelas;
+                }
+            }
+        }
+        
         $data = [
             'title' => 'List User - Table View',
-            'user' => $this->userModel->getUser()
+            'user' => $users
         ];
         return view('list_user_table', $data);
     }
@@ -35,6 +64,19 @@ class UserController extends Controller
     public function create(){
         $kelasModel = new Kelas();
         $kelas = $kelasModel->getKelas();
+        
+        // Dekripsi nama_kelas untuk setiap kelas
+        foreach($kelas as $kelasItem) {
+            if($kelasItem->nama_kelas) {
+                try {
+                    $kelasItem->nama_kelas = Crypt::decryptString($kelasItem->nama_kelas);
+                } catch (\Exception $e) {
+                    // Jika gagal dekripsi, gunakan nilai asli (untuk backward compatibility)
+                    $kelasItem->nama_kelas = $kelasItem->nama_kelas;
+                }
+            }
+        }
+        
         $data = [
             'title' => 'Create User',
             'kelas' => $kelas
@@ -65,6 +107,19 @@ class UserController extends Controller
     {
         $user = $this->userModel->findOrFail($id);
         $kelas = $this->kelasModel->getKelas();
+        
+        // Dekripsi nama_kelas untuk setiap kelas
+        foreach($kelas as $kelasItem) {
+            if($kelasItem->nama_kelas) {
+                try {
+                    $kelasItem->nama_kelas = Crypt::decryptString($kelasItem->nama_kelas);
+                } catch (\Exception $e) {
+                    // Jika gagal dekripsi, gunakan nilai asli (untuk backward compatibility)
+                    $kelasItem->nama_kelas = $kelasItem->nama_kelas;
+                }
+            }
+        }
+        
         $data = [
             'title' => 'Edit User',
             'user' => $user,

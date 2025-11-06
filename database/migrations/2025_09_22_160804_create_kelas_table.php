@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('kelas', function (Blueprint $table) {
             $table->id();                          // kolom id (bigserial, primary key)
-            $table->string('nama_kelas', 100);     // kolom nama_kelas
+            $table->text('nama_kelas');            // kolom nama_kelas (TEXT untuk enkripsi)
             $table->timestamps();                  // kolom created_at & updated_at
         });
     }
