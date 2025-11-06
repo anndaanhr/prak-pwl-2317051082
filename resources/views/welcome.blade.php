@@ -64,6 +64,45 @@
         </div>
 
         <div class="row g-4 justify-content-center mt-4">
+            <div class="col-md-5">
+                <div class="card border-0 shadow-sm text-center">
+                    <div class="card-body">
+                        <i class="bi bi-box-arrow-in-right display-4 text-primary mb-3"></i>
+                        <h5 class="card-title">Login</h5>
+                        <p class="card-text">Masuk ke akun Anda untuk mengakses dashboard dan fitur lainnya.</p>
+                        @auth
+                            <a href="{{ route('dashboard') }}" class="btn btn-primary mt-2">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}" class="btn btn-primary mt-2">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                        @endauth
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card border-0 shadow-sm text-center">
+                    <div class="card-body">
+                        <i class="bi bi-person-plus display-4 text-success mb-3"></i>
+                        <h5 class="card-title">Register</h5>
+                        <p class="card-text">Buat akun baru untuk mulai menggunakan aplikasi.</p>
+                        @auth
+                            <a href="{{ route('profile.edit') }}" class="btn btn-success mt-2">
+                                <i class="bi bi-person-circle"></i> Profile
+                            </a>
+                        @else
+                            <a href="{{ route('register') }}" class="btn btn-success mt-2">
+                                <i class="bi bi-person-plus"></i> Register
+                            </a>
+                        @endauth
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 justify-content-center mt-4">
             <div class="col-md-6">
                 <div class="card border-0 shadow-sm text-center">
                     <div class="card-body">

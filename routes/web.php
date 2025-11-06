@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MataKuliahController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,12 +16,26 @@ use App\Http\Controllers\MataKuliahController;
 |
 */
 
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::get('/profile/{Nama}/{NPM}/{Kelas}', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile');
-Route::post('/profile/upload', [App\Http\Controllers\ProfileController::class, 'upload'])->name('profile.upload');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Profile routes (old - student profile)
+Route::get('/profile/{Nama}/{NPM}/{Kelas}', [ProfileController::class, 'show'])->name('profile');
+Route::post('/profile/upload', [ProfileController::class, 'upload'])->name('profile.upload');
 
 // Direct route to Ananda's profile
-Route::get('/profile', function () {
+Route::get('/my-profile', function () {
     return redirect()->route('profile', [
         'Nama' => 'Ananda Anhar Subing',
         'NPM' => '2317051082', 
@@ -28,10 +43,7 @@ Route::get('/profile', function () {
     ]);
 })->name('my.profile');
 
-Route::get('/', function () {
-    return view(view: 'welcome');
-});
-
+// User routes
 Route::get('/user', [UserController::class, 'index'])->name('user.index');
 Route::get('/user/table', [UserController::class, 'table'])->name('user.table');
 Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
@@ -47,3 +59,5 @@ Route::post('/mata-kuliah', [MataKuliahController::class, 'store'])->name('mata-
 Route::get('/mata-kuliah/{id}/edit', [MataKuliahController::class, 'edit'])->name('mata-kuliah.edit');
 Route::put('/mata-kuliah/{id}', [MataKuliahController::class, 'update'])->name('mata-kuliah.update');
 Route::delete('/mata-kuliah/{id}', [MataKuliahController::class, 'destroy'])->name('mata-kuliah.destroy');
+
+require __DIR__.'/auth.php';
